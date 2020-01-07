@@ -148,6 +148,6 @@ export class Control {
   }
 
   hasValue() {
-    return this.value !== undefined;
+    return !_.isEqual(this.value, this.filterManager.getUnsetValue());
   }
 }

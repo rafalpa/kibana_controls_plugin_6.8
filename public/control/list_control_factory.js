@@ -116,10 +116,18 @@ export async function listControlFactory(controlParams, kbnApi, useTimeFilter) {
     const filters = await kbnApi.queryFilter.getFilters();
     const searchSource = new kbnApi.SearchSource(initialSearchSourceState);
     // Do not not inherit from rootSearchSource to avoid picking up time and globals
+    searchSource.setField('filter', () => {
+      const activeFilters = [...filters];
+      if (useTimeFilter) {
+        console.log("useTimeFilter is true")
+        activeFilters.push(kbnApi.timeFilter.createFilter(indexPattern));
+      }
+      return activeFilters;
+    });
     searchSource.setParent(false);
     searchSource.setField('size', 0);
     searchSource.setField('index', indexPattern);
-    searchSource.setField('filter', filters);
+    // searchSource.setField('filter', filters);
     searchSource.setField('aggs', aggs);
 
 
